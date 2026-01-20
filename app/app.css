@@ -1,15 +1,88 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Zava Brand Colors */
+  --color-zava-black: #0a0c0c;
+  --color-data-stream: #9ec9d9;
+  --color-data-slate: #183d4c;
+  --color-data-mesh: #0d2a35;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+html {
+  scroll-behavior: smooth;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+body {
+  @apply bg-zava-black text-white antialiased;
+  color-scheme: dark;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-zava-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-data-slate);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-data-stream);
+}
+
+/* Animated mesh background utility */
+@keyframes mesh-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
+
+.animate-mesh-flow {
+  animation: mesh-flow 20s ease-in-out infinite;
+}
+
+/* Data stream pulse animation */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Floating animation for hero elements */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
