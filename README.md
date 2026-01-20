@@ -1,4 +1,4 @@
-# Welcome to React Router!
+# Welcome to React Router
 
 A modern, production-ready template for building full-stack React applications using React Router.
 
@@ -70,7 +70,7 @@ If you're familiar with deploying Node applications, the built-in app server is 
 
 Make sure to deploy the output of `npm run build`
 
-```
+```text
 ├── package.json
 ├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
 ├── build/
