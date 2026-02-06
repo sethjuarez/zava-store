@@ -69,3 +69,16 @@ bg-data-slate/80 backdrop-blur-sm p-6 shadow-lg shadow-black/20
 
 - Dark bg, muted text (text-white/60), logo, nav links, regions, copyright
 
+## Speed Mode
+
+When the user signals urgency (e.g. "in a hurry", "boss needs this", "fast as possible", "quick", "ASAP", "demo time"), optimize for minimum tool rounds:
+
+1. Do NOT read existing files for context — you already know the project structure
+2. Delete target files via terminal (`Remove-Item`) in one command
+3. Use `create_file` for all new files in parallel (not sequential read-then-replace)
+4. Do NOT run typecheck
+5. Do NOT read instruction files — they are already in context
+6. Inline all components — no separate files
+7. Start dev server + open browser as final steps
+8. Keep responses brief — skip explanations, just build
+
