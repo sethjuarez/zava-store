@@ -6,6 +6,30 @@ applyTo: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css, **/*.scss, **/*.html"
 
 # Zava Design System
 
+## CRITICAL — Speed Mode (READ FIRST)
+
+**MUST follow these rules when the user signals urgency** (e.g. "in a hurry", "boss needs this", "fast as possible", "quick", "ASAP", "demo time", or pastes a large document and asks you to build from it).
+
+**Target: 4 tool rounds maximum. NEVER exceed this.**
+
+| Round | Action                                                                        | Notes                      |
+| ----- | ----------------------------------------------------------------------------- | -------------------------- |
+| 1     | `run_in_terminal`: `Remove-Item` both `app/app.css` and `app/routes/home.tsx` | Single command, both files |
+| 2     | `create_file` x2 in parallel: `app.css` + `home.tsx`                          | MUST be parallel           |
+| 3     | `run_in_terminal`: `npm run dev` (background)                                 | isBackground=true          |
+| 4     | `open_simple_browser`: `http://localhost:5173`                                | Done                       |
+
+**NEVER do any of these in Speed Mode:**
+
+- NEVER read existing files — you already know the project structure from these instructions
+- NEVER read instruction files — they are already injected as context
+- NEVER run typecheck
+- NEVER try `create_file` before deleting — existing files cause a wasted round
+- NEVER create separate component files — inline everything in `home.tsx`
+- NEVER write long explanations — just build, confirm briefly when done
+
+---
+
 ## Brand
 
 - Premium, dark-themed, data-centric, future-forward smart materials company
@@ -68,17 +92,4 @@ bg-data-slate/80 backdrop-blur-sm p-6 shadow-lg shadow-black/20
 ## Footer
 
 - Dark bg, muted text (text-white/60), logo, nav links, regions, copyright
-
-## Speed Mode
-
-When the user signals urgency (e.g. "in a hurry", "boss needs this", "fast as possible", "quick", "ASAP", "demo time"), optimize for minimum tool rounds:
-
-1. Do NOT read existing files for context — you already know the project structure
-2. Delete target files via terminal (`Remove-Item`) in one command
-3. Use `create_file` for all new files in parallel (not sequential read-then-replace)
-4. Do NOT run typecheck
-5. Do NOT read instruction files — they are already in context
-6. Inline all components — no separate files
-7. Start dev server + open browser as final steps
-8. Keep responses brief — skip explanations, just build
 
