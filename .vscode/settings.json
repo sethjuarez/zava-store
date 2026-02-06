@@ -1,4 +1,17 @@
 {
-  "chat.agent.autoApprove": "always"
+  // Auto-approve all tool invocations (file edits, reads, etc.)
+  "chat.agent.autoApprove": "always",
+
+  // Auto-approve terminal commands used in agent flows
+  "chat.tools.terminal.autoApprove": {
+    "npm": true,
+    "npx": true,
+    "/^Remove-Item/": true,
+    "/^mkdir/": true,
+    "/^git/": true
+  },
+
+  // Enforce model-specified timeouts so long-running cmds don't block
+  "chat.tools.terminal.enforceTimeoutFromModel": true
 }
 
