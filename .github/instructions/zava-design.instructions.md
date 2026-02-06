@@ -6,27 +6,28 @@ applyTo: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css, **/*.scss, **/*.html"
 
 # Zava Design System
 
-## CRITICAL — Speed Mode (READ FIRST)
+## CRITICAL — Speed Mode (READ FIRST
 
 **MUST follow these rules when the user signals urgency** (e.g. "in a hurry", "boss needs this", "fast as possible", "quick", "ASAP", "demo time", or pastes a large document and asks you to build from it).
 
-**Target: 4 tool rounds maximum. NEVER exceed this.**
+**Target: 3 tool rounds maximum. NEVER exceed this.**
 
-| Round | Action                                                                        | Notes                      |
-| ----- | ----------------------------------------------------------------------------- | -------------------------- |
-| 1     | `run_in_terminal`: `Remove-Item` both `app/app.css` and `app/routes/home.tsx` | Single command, both files |
-| 2     | `create_file` x2 in parallel: `app.css` + `home.tsx`                          | MUST be parallel           |
-| 3     | `run_in_terminal`: `npm run dev` (background)                                 | isBackground=true          |
-| 4     | `open_simple_browser`: `http://localhost:5173`                                | Done                       |
+| Round | Action                                                                                                                                      | Notes                                       |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 1     | `run_in_terminal`: `Remove-Item "app/app.css","app/routes/home.tsx" -Force -ErrorAction SilentlyContinue` (safe whether files exist or not) | Single command, both files, always succeeds |
+| 2     | `create_file` x2 in parallel: `app.css` + `home.tsx`                                                                                        | MUST be parallel                            |
+| 3     | `run_in_terminal`: `npm run dev` (background, isBackground=true) **AND** `open_simple_browser`: `http://localhost:5173` in parallel         | Both in one round — done                    |
 
-**NEVER do any of these in Speed Mode:**
+**ABSOLUTE PROHIBITIONS in Speed Mode (violating any = wasted round = demo failure):**
 
-- NEVER read existing files — you already know the project structure from these instructions
-- NEVER read instruction files — they are already injected as context
-- NEVER run typecheck
-- NEVER try `create_file` before deleting — existing files cause a wasted round
-- NEVER create separate component files — inline everything in `home.tsx`
-- NEVER write long explanations — just build, confirm briefly when done
+- **NEVER read ANY files** — instruction files are already injected as context, you know the project structure
+- **NEVER read skill files** — you have the design system, colors, typography, and component patterns above
+- **NEVER run typecheck** — the dev server will catch errors
+- **NEVER create separate component files** — inline everything in `home.tsx`
+- **NEVER write long explanations** — just build, confirm in one sentence when done
+- **NEVER ask the user questions** — infer everything from the pasted content
+
+> **Why `Remove-Item` first?** The `create_file` tool CANNOT overwrite existing files. Deletion is mandatory. Using `-Force -ErrorAction SilentlyContinue` makes it safe for both greenfield and existing-file scenarios — it never errors, never prompts.
 
 ---
 
