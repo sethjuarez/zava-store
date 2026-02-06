@@ -6,20 +6,41 @@ applyTo: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css, **/*.scss, **/*.html"
 
 # Zava Design System
 
-## CRITICAL — Speed Mode (READ FIRST
+## CRITICAL — Speed Mode (READ FIRST)
+
+> **STOP. DO NOT CALL ANY TOOL YET.**
+> Before your FIRST tool call, confirm you are following this exact 2-round plan.
+> If your first tool call is `read_file`, `create_file`, or anything other than
+> `replace_string_in_file`, YOU ARE DOING IT WRONG. Start over mentally.
 
 **MUST follow these rules when the user signals urgency** (e.g. "in a hurry", "boss needs this", "fast as possible", "quick", "ASAP", "demo time", or pastes a large document and asks you to build from it).
 
-**Target: 2 tool rounds maximum. NEVER exceed this.**
+**Target: 2 tool rounds maximum. NEVER exceed this. 3 rounds = demo failure.**
 
-| Round | Action                                                                                                                              | Notes                            |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| 1     | `replace_string_in_file` x2 in parallel: replace full contents of `app.css` + `home.tsx`                                            | MUST be parallel, edits in-place |
-| 2     | `run_in_terminal`: `npm run dev` (background, isBackground=true) **AND** `open_simple_browser`: `http://localhost:5173` in parallel | Both in one round — done         |
+### The ONLY Two Rounds Allowed
 
-**How to replace full file contents:** Use `replace_string_in_file` with `oldString` set to the entire current file content and `newString` set to the new content. The files always start from a known reset state (run `.\reset.ps1` to restore). The reset-state contents are:
+| Round | Tool calls (ALL in parallel)                                                                               | If you do anything else, you failed |
+| ----- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1     | `replace_string_in_file` on `app/app.css` + `replace_string_in_file` on `app/routes/home.tsx` (parallel)   | NO reads, NO creates, NO deletes    |
+| 2     | `run_in_terminal` npm run dev (isBackground=true) + `open_simple_browser` http://localhost:5173 (parallel) | Then say ONE sentence. Done.        |
 
-**`app/app.css` reset content:**
+### Why `replace_string_in_file` and NOTHING else
+
+- `create_file` **FAILS** on existing files and triggers confirmation dialogs — guaranteed wasted round
+- `read_file` **wastes a round** — all file contents you need are printed below
+- The files ALWAYS start from a known reset state (run `.\reset.ps1` to restore)
+
+### Pre-flight Checklist (mental, no tool calls)
+
+1. Do I know the current contents of `app.css`? → YES, they are below.
+2. Do I know the current contents of `home.tsx`? → YES, they are below.
+3. Do I know the design tokens, colors, typography? → YES, they are below.
+4. Am I about to call `read_file`? → STOP. I already have everything.
+5. Am I about to call `create_file`? → STOP. The files exist. Use `replace_string_in_file`.
+
+### Reset-State File Contents (use as `oldString`)
+
+**`app/app.css` — use this EXACT string as oldString:**
 
 ```css
 @import "tailwindcss";
@@ -40,7 +61,7 @@ body {
 }
 ```
 
-**`app/routes/home.tsx` reset content:**
+**`app/routes/home.tsx` — use this EXACT string as oldString:**
 
 ```tsx
 import type { Route } from "./+types/home";
@@ -58,12 +79,14 @@ export default function Home() {
 }
 ```
 
-**ABSOLUTE PROHIBITIONS in Speed Mode (violating any = wasted round = demo failure):**
+### ABSOLUTE PROHIBITIONS in Speed Mode
 
-- **NEVER delete files** — use `replace_string_in_file` to edit in-place (no permission prompts)
-- **NEVER use `create_file`** — it cannot overwrite existing files and triggers confirmation dialogs
-- **NEVER read ANY files** — instruction files are already injected as context, reset-state contents are documented above
-- **NEVER read skill files** — you have the design system, colors, typography, and component patterns above
+Violating ANY of these = wasted round = demo goes over time = failure.
+
+- **NEVER `read_file`** — instruction files are already injected as context, reset-state contents are above
+- **NEVER `create_file`** — it CANNOT overwrite existing files, it WILL fail, you WILL waste a round recovering
+- **NEVER delete files** — use `replace_string_in_file` to edit in-place
+- **NEVER read skill files** — you have the design system, colors, typography, and component patterns in this file
 - **NEVER run typecheck** — the dev server will catch errors
 - **NEVER create separate component files** — inline everything in `home.tsx`
 - **NEVER write long explanations** — just build, confirm in one sentence when done
