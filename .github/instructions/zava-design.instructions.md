@@ -138,8 +138,14 @@ bg-data-slate/80 backdrop-blur-sm p-6 shadow-lg shadow-black/20
 
 - Full-bleed bg-zava-black with hexagonal mesh pattern
 - Data streams in data-stream color
-- Text: "Weaving the future with intelligent fabric" + "Go Ahead."
-- CTA: "Explore ZavaCore" outline button
+- Headline: **"Design Your Shirt with AI"** (text-5xl md:text-7xl font-bold)
+- Subtext: "Weaving the future with intelligent fabric." (text-white/70)
+- Tagline: **"Go Ahead."** in data-stream color (text-2xl md:text-3xl font-semibold)
+- **PRIMARY CTA (REQUIRED — must always be present and prominent):**
+  - Button text: **"Talk to AI Agent"**
+  - Style: outline button (border-data-stream, text-data-stream, px-8 py-4 text-lg font-semibold)
+  - This CTA is the most important element on the page — it drives the user to the AI agent experience
+  - It must be visually dominant and centered in the hero
 
 ## Motion Rules
 
@@ -156,4 +162,3 @@ bg-data-slate/80 backdrop-blur-sm p-6 shadow-lg shadow-black/20
 ## Footer
 
 - Dark bg, muted text (text-white/60), logo, nav links, regions, copyright
-
