@@ -139,13 +139,15 @@ bg-data-slate/80 backdrop-blur-sm p-6 shadow-lg shadow-black/20
 - Full-bleed bg-zava-black with hexagonal mesh pattern
 - Data streams in data-stream color
 - Headline: **"Design Your Shirt with AI"** (text-5xl md:text-7xl font-bold)
-- Subtext: "Weaving the future with intelligent fabric." (text-white/70)
+- Subtitle: **"Powered by ZavaCore™ Fiber"** (text-lg md:text-xl text-white/60) — displayed directly below the headline
+- Subtext: "The world's first truly seamless, intelligent textile—combining comfort and real-time insight for life's most demanding environments." (text-white/70)
 - Tagline: **"Go Ahead."** in data-stream color (text-2xl md:text-3xl font-semibold)
 - **PRIMARY CTA (REQUIRED — must always be present and prominent):**
-  - Button text: **"Talk to AI Agent"**
+  - Button text: **"Design Your Shirt"**
   - Style: outline button (border-data-stream, text-data-stream, px-8 py-4 text-lg font-semibold)
-  - This CTA is the most important element on the page — it drives the user to the AI agent experience
+  - This CTA is the most important element on the page — it drives the user to the interactive AI shirt designer experience
   - It must be visually dominant and centered in the hero
+  - Use the same CTA text in the nav bar and any other CTA banners on the page
 
 ## Motion Rules
 
