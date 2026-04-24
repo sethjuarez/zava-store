@@ -9,6 +9,7 @@ on:
       - "package-lock.json"
       - "vite.config.ts"
       - "react-router.config.ts"
+      - "screenshots/**"
       - ".github/workflows/screenshots.yml"
   workflow_dispatch:
     inputs:
@@ -152,6 +153,13 @@ jobs:
           PR_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
+
+          head_subject="$(git log -1 --pretty=%s)"
+          if [ "$head_subject" = "Update PR screenshots" ]; then
+            echo "Screenshot files are already published on the PR head."
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           target_dir="screenshots/pr-${PR_NUMBER}"
           rm -rf "$target_dir"
