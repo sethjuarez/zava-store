@@ -9,5 +9,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div data-visual-ci-test="inline-screenshot-comment">
+      <Welcome />
+    </div>
+  );
 }
