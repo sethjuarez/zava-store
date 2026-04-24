@@ -22,10 +22,16 @@ $env:WORKIQ_POLICY_DIR = (Resolve-Path ".workiq\policy").Path
 
 ## Recommended retrieval sequence
 
-1. Search or fetch candidate messages with structured metadata:
+1. Search or fetch candidate messages with structured metadata. In PowerShell, keep the full WorkIQ path in one quoted string and escape OData `$` as `` `$ ``. Avoid complex `$search` expressions with operators like `from:` because quoting mistakes can split the URL at `&` and make WorkIQ treat part of the query as a path. Prefer a simple keyword search, then filter sender/subject from the returned JSON.
 
 ```powershell
 npx workiq fetch -u "/me/messages?`$search=""<search terms>""&`$top=5&`$select=id,subject,from,receivedDateTime,hasAttachments,bodyPreview"
+```
+
+If search quoting fails or the query is ambiguous, fetch recent messages and filter locally instead:
+
+```powershell
+npx workiq fetch -u "/me/messages?`$top=25&`$select=id,subject,from,receivedDateTime,hasAttachments,bodyPreview"
 ```
 
 2. Fetch the full message body by ID:
