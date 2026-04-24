@@ -70,6 +70,11 @@ npx workiq fetch -u "/shares/$shareToken/driveItem?`$select=id,name,size,webUrl"
 npx workiq ask -q "Read the contents of the linked document from the relevant message and provide the text needed to complete the requested task."
 ```
 
+## Acting on requests from messages
+
+- When a message asks you to create tracking issues, create new issues as requested. Do not replace issue creation with a duplicate search or validation of existing issues unless the user explicitly asks you to avoid duplicates.
+- If the message asks for multiple issues with different intent, keep them separate and preserve the requester’s distinction between immediate implementation work and future/scoping work.
+
 ## Avoid
 
 - Do not treat `hasAttachments=false` as a blocker for linked documents.
