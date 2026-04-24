@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <div data-visual-ci-test="inline-screenshot-comment">
+    <div data-visual-ci-test="inline-screenshot-comment-rerun">
       <Welcome />
     </div>
   );
