@@ -10,6 +10,7 @@ When asked to use WorkIQ to find an email, retrieve a linked Microsoft 365 docum
 ## Guidance
 
 - A SharePoint/OneDrive document can appear as an inline Outlook link rather than an attachment. `hasAttachments=false` does not mean there is no document to retrieve.
+- If a user says "download the attached document" while asking you to act on its contents, treat that as "retrieve/read the document contents." Do not save the binary locally unless the user explicitly asks to save or upload the file itself.
 - Use the repo-local WorkIQ policy when resolving Graph sharing links, because this repo allows `/shares/**` for document retrieval:
 
 ```powershell
