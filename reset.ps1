@@ -7,6 +7,13 @@ if ($proc) { Stop-Process -Id $proc -Force -ErrorAction SilentlyContinue; Write-
 
 git checkout app/routes/home.tsx app/app.css
 
+# Set WorkIQ policy dir to repo-local policy (enables /shares/** for SharePoint file access)
+# Set for current process AND persist for future sessions (user-level)
+$policyDir = Join-Path $PSScriptRoot ".workiq\policy"
+$env:WORKIQ_POLICY_DIR = $policyDir
+[Environment]::SetEnvironmentVariable("WORKIQ_POLICY_DIR", $policyDir, "User")
+Write-Host "WorkIQ policy dir set to: $policyDir (persisted for user)" -ForegroundColor Cyan
+
 # Remove generated component files
 if (Test-Path "app/components") {
   Remove-Item -Recurse -Force "app/components"

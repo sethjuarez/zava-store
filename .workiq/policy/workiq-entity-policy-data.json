@@ -1,0 +1,80 @@
+{
+  "path_allow": [
+    "/me",
+    "/me/**",
+    "/users",
+    "/users/**",
+    "/sites",
+    "/sites/**",
+    "/planner",
+    "/planner/**",
+    "/drives",
+    "/drives/**",
+    "/groups",
+    "/groups/**",
+    "/teams",
+    "/teams/**",
+    "/places",
+    "/places/**",
+    "/sharepoint-rest/web",
+    "/sharepoint-rest/web/**",
+    "/sharepoint-rest/search",
+    "/sharepoint-rest/search/**",
+    "/sharepoint-rest/contextinfo",
+    "/sharepoint-rest/sitepages",
+    "/sharepoint-rest/sitepages/**",
+    "/sharepoint-rest/lists",
+    "/sharepoint-rest/lists/**",
+    "/dataverse",
+    "/dataverse/**",
+    "/shares",
+    "/shares/**"
+  ],
+  "path_deny_segments": [
+    "/authentication/",
+    "/appRoleAssignments/",
+    "/licenseDetails/",
+    "/oauth2PermissionGrants/",
+    "/organization/",
+    "/applications/",
+    "/servicePrincipals/"
+  ],
+  "query_deny": [
+    "$skip",
+    "$skiptoken"
+  ],
+  "collection_caps": {
+    "default": 25,
+    "max": 100,
+    "chat_messages": 10
+  },
+  "select_defaults": {
+    "messages": "id,subject,from,receivedDateTime,isRead,importance",
+    "events": "id,subject,start,end,location,organizer,isAllDay",
+    "calendarview": "id,subject,start,end,location,organizer,isAllDay",
+    "tasks": "id,title,percentComplete,dueDateTime,priority",
+    "plans": "id,title,owner,createdDateTime",
+    "people": "id,displayName,jobTitle,department,userPrincipalName",
+    "chats": "id,topic,chatType,lastUpdatedDateTime",
+    "contacts": "id,displayName,emailAddresses,mobilePhone,jobTitle",
+    "children": "id,name,size,lastModifiedDateTime,webUrl",
+    "items": "id,fields",
+    "directReports": "id,displayName,jobTitle,department,userPrincipalName",
+    "lists": "id,displayName,description,lastModifiedDateTime",
+    "members": "id,displayName,userPrincipalName",
+    "channels": "id,displayName,description,membershipType",
+    "buckets": "id,name,orderHint,planId",
+    "notebooks": "id,displayName,lastModifiedDateTime"
+  },
+  "known_collection_segments": [
+    "messages", "events", "calendarview", "tasks", "plans", "people",
+    "contacts", "chats", "members", "channels", "children", "items",
+    "directReports", "lists", "drives", "sites", "buckets", "notebooks"
+  ],
+  "mutations": {
+    "allowed": true,
+    "allowed_methods": ["POST", "PATCH", "DELETE", "PUT"]
+  },
+  "body_rules": [],
+  "base_url": "https://graph.microsoft.com/v1.0"
+}
