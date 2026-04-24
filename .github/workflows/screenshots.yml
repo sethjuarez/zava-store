@@ -20,6 +20,7 @@ on:
 
 permissions:
   actions: read
+  checks: write
   contents: write
   issues: write
   pull-requests: write
@@ -158,6 +159,7 @@ jobs:
           if [ "$head_subject" = "Update PR screenshots" ]; then
             echo "Screenshot files are already published on the PR head."
             echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -172,12 +174,15 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No screenshot changes to commit."
+            screenshot_pushed=false
           else
             git commit -m "Update PR screenshots"
             git push origin "HEAD:${PR_BRANCH}"
+            screenshot_pushed=true
           fi
 
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "pushed=$screenshot_pushed" >> "$GITHUB_OUTPUT"
 
       - name: Comment on PR
         if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository
@@ -192,6 +197,24 @@ jobs:
             const screenshotBaseUrl = `${context.serverUrl}/${owner}/${repo}/raw/${screenshotSha}/screenshots/pr-${issue_number}`;
             const desktopUrl = `${screenshotBaseUrl}/homepage-desktop.png`;
             const mobileUrl = `${screenshotBaseUrl}/homepage-mobile.png`;
+            const screenshotsPushed = "${{ steps.publish_screenshots.outputs.pushed }}" === "true";
+
+            if (screenshotsPushed) {
+              await github.rest.checks.create({
+                owner,
+                repo,
+                name: "Screenshots published",
+                head_sha: screenshotSha,
+                status: "completed",
+                conclusion: "success",
+                details_url: runUrl,
+                output: {
+                  title: "Screenshots published",
+                  summary: "Visual CI captured screenshots, committed them to this PR, and updated the PR comment.",
+                },
+              });
+            }
+
             const body = [
               marker,
               "## Screenshots captured",
