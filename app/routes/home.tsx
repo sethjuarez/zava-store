@@ -126,6 +126,7 @@ export default function Home() {
 
       {/* Hero */}
       <section
+        id="design"
         className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden"
         style={{
           backgroundImage: `
@@ -152,7 +153,6 @@ export default function Home() {
           Go Ahead.
         </p>
         <a
-          id="design"
           href="#segments"
           className="rounded-md border border-data-stream text-data-stream px-8 py-4 text-lg font-semibold tracking-wide hover:bg-data-stream/10 transition-colors duration-300"
         >
