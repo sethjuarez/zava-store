@@ -4,13 +4,15 @@
   --font-sans:
     "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-zava-black: #0a0c0c;
+  --color-data-stream: #9ec9d9;
+  --color-data-slate: #183d4c;
+  --color-data-mesh: #0d2a35;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  @apply bg-zava-black text-white;
+  color-scheme: dark;
 }
