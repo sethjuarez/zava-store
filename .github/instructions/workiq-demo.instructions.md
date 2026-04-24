@@ -17,7 +17,7 @@ $env:WORKIQ_POLICY_DIR = (Resolve-Path ".workiq\policy").Path
 ```
 
 - Resolve SharePoint/OneDrive sharing links through `/shares/{shareToken}/driveItem`.
-- Do not assume a downloaded Office document can be parsed locally. Enterprise documents can be protected or stored in formats that local libraries cannot read. If local parsing fails or protection is likely, use `workiq ask` to read or summarize the document through Microsoft 365 Copilot.
+- Assume linked enterprise Office documents are protected and do not download or parse them locally unless the user explicitly asks for the binary file. Use `workiq ask` to read, summarize, or extract the document text through Microsoft 365 Copilot.
 
 ## Recommended retrieval sequence
 
@@ -50,13 +50,7 @@ $env:WORKIQ_POLICY_DIR = (Resolve-Path ".workiq\policy").Path
 npx workiq fetch -u "/shares/$shareToken/driveItem?`$select=id,name,size,webUrl"
 ```
 
-6. Download only if needed for the demo narrative:
-
-```powershell
-npx workiq fetch-blob -u "/shares/$shareToken/driveItem/content" -o "$env:TEMP"
-```
-
-7. If local parsing is unreliable, extract document text with WorkIQ Ask:
+6. Extract document text with WorkIQ Ask. Include enough context from the email or resolved drive item name so Copilot reads the intended file:
 
 ```powershell
 npx workiq ask -q "Read the contents of the linked document from the relevant message and provide the text needed to complete the requested task."
@@ -65,5 +59,6 @@ npx workiq ask -q "Read the contents of the linked document from the relevant me
 ## Avoid
 
 - Do not treat `hasAttachments=false` as a blocker for linked documents.
-- Do not spend time trying multiple local Office parsers if the document appears protected or unreadable; switch to WorkIQ Ask for content extraction.
+- Do not download enterprise-linked Office documents as a default step. Verify the drive item metadata, then use WorkIQ Ask for content extraction.
+- Do not spend time trying local Office parsers (`python-docx`, `zipfile`, `mammoth`, LibreOffice conversion, etc.) for linked enterprise documents.
 - Do not enumerate SharePoint sites by guessing tenant/team paths unless the `/shares/{shareToken}` route fails. Sharing links already contain enough information to resolve the drive item.
