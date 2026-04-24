@@ -18,7 +18,9 @@ on:
         type: string
 
 permissions:
+  actions: read
   contents: read
+  issues: write
   pull-requests: read
 
 jobs:
@@ -140,3 +142,47 @@ jobs:
           name: zava-store-dev-server-log
           path: /tmp/zava-store-vite.log
           if-no-files-found: ignore
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = "<!-- zava-store-screenshots -->";
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `${marker}
+            ## Screenshots captured
+
+            Visual CI completed successfully for this PR.
+
+            - Artifact: \`zava-store-screenshots\` (\`homepage-desktop.png\`, \`homepage-mobile.png\`)
+            - Server log artifact: \`zava-store-dev-server-log\`
+            - Workflow run: ${runUrl}
+
+            Open the workflow run and download \`zava-store-screenshots\` to view the rendered pages.`;
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.data.find((comment) => comment.body?.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+            }
