@@ -1,7 +1,7 @@
 name: Screenshots
 
 on:
-  pull_request:
+  pull_request_target:
     paths:
       - "app/**"
       - "public/**"
@@ -21,7 +21,7 @@ permissions:
   actions: read
   contents: read
   issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   screenshots:
@@ -144,7 +144,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Comment on PR
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v7
         with:
           script: |
