@@ -34,6 +34,13 @@ If search quoting fails or the query is ambiguous, fetch recent messages and fil
 npx workiq fetch -u "/me/messages?`$top=25&`$select=id,subject,from,receivedDateTime,hasAttachments,bodyPreview"
 ```
 
+When filtering WorkIQ CLI results locally, remember that command output can include wrapper text before or after the JSON payload. Prefer one of these robust approaches:
+
+- Use the visible structured result directly when only a few rows are returned.
+- Re-run a narrower `workiq fetch` once you have an ID or a simple keyword.
+- If parsing is necessary, extract the JSON object from the first `{` through the matching final `}` rather than blindly piping the entire command output to `ConvertFrom-Json`.
+- Avoid parsing large recent-mail payloads when a small follow-up fetch by message ID will be more reliable.
+
 2. Fetch the full message body by ID:
 
 ```powershell
