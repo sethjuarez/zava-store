@@ -1,0 +1,142 @@
+name: Screenshots
+
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
+      - "react-router.config.ts"
+      - ".github/workflows/screenshots.yml"
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: "Branch, tag, or SHA to screenshot. Defaults to the workflow ref."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  screenshots:
+    name: Build and capture screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref || github.event.pull_request.head.sha || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start app
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/zava-store-vite.log 2>&1 &
+          echo $! > /tmp/zava-store-vite.pid
+
+      - name: Wait for app
+        run: |
+          for i in {1..60}; do
+            if curl -fsS -o /dev/null http://127.0.0.1:5173; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/zava-store-vite.log
+          exit 1
+
+      - name: Capture screenshots
+        env:
+          SCREENSHOT_BASE_URL: http://127.0.0.1:5173
+          SCREENSHOT_OUTPUT_DIR: artifacts/screenshots
+        run: |
+          node <<'EOF'
+          const { mkdir } = require("node:fs/promises");
+          const { chromium } = require("playwright");
+
+          const baseUrl = process.env.SCREENSHOT_BASE_URL;
+          const outputDir = process.env.SCREENSHOT_OUTPUT_DIR;
+          const launchArgs = [
+            "--disable-background-networking",
+            "--disable-sync",
+            "--disable-default-apps",
+            "--disable-extensions",
+            "--disable-component-update",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-features=MediaRouter,OptimizationHints,HttpsUpgrades",
+            "--host-resolver-rules=MAP * 0.0.0.0, EXCLUDE 127.0.0.1, EXCLUDE localhost",
+          ];
+          const viewports = [
+            { name: "homepage-desktop", width: 1440, height: 1200 },
+            { name: "homepage-mobile", width: 390, height: 1200 },
+          ];
+
+          (async () => {
+            await mkdir(outputDir, { recursive: true });
+            const browser = await chromium.launch({ args: launchArgs });
+            try {
+              for (const viewport of viewports) {
+                const context = await browser.newContext({
+                  viewport: { width: viewport.width, height: viewport.height },
+                  deviceScaleFactor: 1,
+                });
+                const page = await context.newPage();
+                await page.route("**/*", (route) => {
+                  const url = new URL(route.request().url());
+                  if (["127.0.0.1", "localhost"].includes(url.hostname)) {
+                    return route.continue();
+                  }
+                  return route.abort();
+                });
+                await page.goto(baseUrl, { waitUntil: "networkidle" });
+                await page.screenshot({
+                  path: `${outputDir}/${viewport.name}.png`,
+                  fullPage: true,
+                });
+                await context.close();
+              }
+            } finally {
+              await browser.close();
+            }
+          })();
+          EOF
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: zava-store-screenshots
+          path: artifacts/screenshots/*.png
+          if-no-files-found: error
+
+      - name: Upload server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zava-store-dev-server-log
+          path: /tmp/zava-store-vite.log
+          if-no-files-found: ignore
