@@ -11,6 +11,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <div data-visual-ci-test="inline-screenshot-comment-rerun">
+      <p style={{ position: "absolute", left: 24, top: 24 }}>Visual CI retest</p>
       <Welcome />
     </div>
   );
